@@ -173,12 +173,14 @@ function generateAdvice() {
 }
 
 function makeButtonTricky() {
-    const maxX = window.innerWidth - btn.offsetWidth;
-    const maxY = window.innerHeight - btn.offsetHeight;
+    const btnWidth = btn.offsetWidth;
+    const btnHeight = btn.offsetHeight;
+    const maxX = window.innerWidth - btnWidth - 10; // отступ 10px от края
+    const maxY = window.innerHeight - btnHeight - 10;
 
-    // случайное положение
     const newX = Math.random() * maxX;
     const newY = Math.random() * maxY;
+
     btn.style.position = "absolute";
     btn.style.left = `${newX}px`;
     btn.style.top = `${newY}px`;
