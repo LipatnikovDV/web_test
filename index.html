@@ -180,16 +180,18 @@ function makeButtonTricky() {
     const moveRange = 300;
 
     // Центр окна
-    const centerX = window.innerWidth / 2 - btnWidth / 2;
-    const centerY = window.innerHeight / 2 - btnHeight / 2;
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight / 2;
 
-    // Случайное смещение внутри квадрата
-    const offsetX = (Math.random() - 0.5) * moveRange; // -range/2 ... +range/2
-    const offsetY = (Math.random() - 0.5) * moveRange;
+    // Ограничение координат по горизонтали и вертикали
+    const minX = Math.max(centerX - moveRange / 2, 0);
+    const maxX = Math.min(centerX + moveRange / 2 - btnWidth, window.innerWidth - btnWidth);
+    const minY = Math.max(centerY - moveRange / 2, 0);
+    const maxY = Math.min(centerY + moveRange / 2 - btnHeight, window.innerHeight - btnHeight);
 
-    // Новые координаты кнопки
-    const newX = centerX + offsetX;
-    const newY = centerY + offsetY;
+    // Новые случайные координаты в безопасном диапазоне
+    const newX = minX + Math.random() * (maxX - minX);
+    const newY = minY + Math.random() * (maxY - minY);
 
     btn.style.position = "absolute";
     btn.style.left = `${newX}px`;
@@ -217,6 +219,7 @@ function makeButtonTricky() {
     ];
     btn.textContent = texts[Math.floor(Math.random() * texts.length)];
 }
+
 </script>
 </body>
 </html>
