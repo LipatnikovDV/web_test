@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Тест на общие знания</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    .question { margin-bottom: 20px; }
+    button { margin: 5px 0; padding: 10px 20px; }
+    #timer { font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Тест на общие знания</h1>
+
+  <div id="start-screen">
+    <label>ФИО: <input type="text" id="fio" required></label>
+    <button onclick="startTest()">Начать тест</button>
+  </div>
+
+  <div id="test-screen" style="display:none;">
+    <div id="question-container"></div>
+    <div>Время: <span id="timer"></span> сек</div>
+  </div>
+
+  <div id="end-screen" style="display:none;">
+    <h2>Тест завершён!</h2>
+    <p>Спасибо за участие.</p>
+  </div>
+
+  <script>
+    // Список вопросов (можешь редактировать)
+    const questions = [
+      {
+        text: "Столица Франции?",
+        options: ["Берлин", "Париж", "Рим", "Мадрид", "Прага"],
+        time: 15
+      },
+      {
+        text: "2 + 2?",
+        options: ["3", "4", "5", "6", "7"],
+        time: 10
+      },
+      {
+        text: "Какой цвет смешивается с синим, чтобы получить зелёный?",
+        options: ["Красный", "Жёлтый", "Белый", "Чёрный", "Фиолетовый"],
+        time: 12
+      }
+    ];
+
+    const formURL = "https://docs.google.com/forms/d/e/1ACThgzxgR7Xbn9eQN8yeSIfhwHnzPfl56_0G1K5mWR4/formResponse";
+    const entryFIO = "entry.123456";       // <-- замени на ID поля ФИО из формы
+    const entryQuestion = "entry.234567";  // <-- ID поля вопроса
+    const entryAnswer = "entry.345678";    // <-- ID поля ответа
+    const entryStartTime = "entry.456789"; // <-- ID поля начала
+    const entryEndTime = "entry.567890";   // <-- ID поля конца
+
+    let currentQuestion = 0;
+    let timerInterval;
+    let startTime;
+
+    function startTest() {
+      const fio = document.getElementById("fio").value.trim();
+      if(!fio) { alert("Введите ФИО"); return; }
+      window.fio = fio;
+      document.getElementById("start-screen").style.display = "none";
+      document.getElementById("test-screen").style.display = "block";
+      showQuestion();
+    }
+
+    function showQuestion() {
+      if(currentQuestion >= questions.length) {
+        document.getElementById("test-screen").style.display = "none";
+        document.getElementById("end-screen").style.display = "block";
+        return;
+      }
+
+      const q = questions[currentQuestion];
+      const container = document.getElementById("question-container");
+      container.innerHTML = `<div class="question"><h3>${q.text}</h3></div>`;
+
+      q.options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.innerText = opt;
+        btn.onclick = () => submitAnswer(opt);
+        container.appendChild(btn);
+      });
+
+      // Таймер
+      let timeLeft = q.time;
+      document.getElementById("timer").innerText = timeLeft;
+      startTime = new Date();
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        document.getElementById("timer").innerText = timeLeft;
+        if(timeLeft <= 0) {
+          clearInterval(timerInterval);
+          submitAnswer("Не ответил");
+        }
+      }, 1000);
+    }
+
+    function submitAnswer(answer) {
+      clearInterval(timerInterval);
+      const endTime = new Date();
+
+      // Отправка данных в Google Form
+      const formData = new FormData();
+      formData.append(entryFIO, window.fio);
+      formData.append(entryQuestion, questions[currentQuestion].text);
+      formData.append(entryAnswer, answer);
+      formData.append(entryStartTime, startTime.toISOString());
+      formData.append(entryEndTime, endTime.toISOString());
+
+      fetch(formURL, {
+        method: "POST",
+        body: formData,
+        mode: "no-cors"
+      });
+
+      currentQuestion++;
+      showQuestion();
+    }
+  </script>
+</body>
+</html>
