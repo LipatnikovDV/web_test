@@ -175,29 +175,39 @@ function generateAdvice() {
 function makeButtonTricky() {
     const btnWidth = btn.offsetWidth;
     const btnHeight = btn.offsetHeight;
-    const maxX = window.innerWidth - btnWidth - 200; // отступ 10px от края
-    const maxY = window.innerHeight - btnHeight - 200;
 
-    const newX = Math.random() * maxX;
-    const newY = Math.random() * maxY;
+    // Размер квадрата движения (px)
+    const moveRange = 300;
+
+    // Центр окна
+    const centerX = window.innerWidth / 2 - btnWidth / 2;
+    const centerY = window.innerHeight / 2 - btnHeight / 2;
+
+    // Случайное смещение внутри квадрата
+    const offsetX = (Math.random() - 0.5) * moveRange; // -range/2 ... +range/2
+    const offsetY = (Math.random() - 0.5) * moveRange;
+
+    // Новые координаты кнопки
+    const newX = centerX + offsetX;
+    const newY = centerY + offsetY;
 
     btn.style.position = "absolute";
     btn.style.left = `${newX}px`;
     btn.style.top = `${newY}px`;
 
-    // случайный размер
+    // Случайный размер
     const newWidth = 100 + Math.random() * 150;
     const newHeight = 40 + Math.random() * 40;
     btn.style.width = `${newWidth}px`;
     btn.style.height = `${newHeight}px`;
 
-    // случайное скругление
+    // Скругление
     btn.style.borderRadius = `${Math.random() * 50}%`;
 
-    // случайный цвет
+    // Цвет
     btn.style.backgroundColor = `hsl(${Math.random() * 360}, 70%, 60%)`;
 
-    // случайный текст
+    // Текст
     const texts = [
         "Нажимай, если осмелишься!",
         "Попробуй поймать меня!",
