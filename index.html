@@ -19,6 +19,8 @@
 
     #container {
         position: relative;
+        width: 100%;
+        height: 100%;
     }
 
     #advice {
@@ -26,6 +28,12 @@
         min-height: 60px;
         margin-bottom: 20px;
         transition: all 0.3s ease;
+        position: absolute;
+        top: 20%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80%;
+        z-index: 10;
     }
 
     #trickyBtn {
@@ -37,7 +45,10 @@
         border-radius: 10px;
         cursor: pointer;
         transition: all 0.3s ease;
-        position: relative;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
     }
 </style>
 </head>
@@ -161,6 +172,7 @@ const advices = [
 let clickCount = 0;
 const adviceEl = document.getElementById("advice");
 const btn = document.getElementById("trickyBtn");
+const container = document.getElementById("container");
 
 function generateAdvice() {
     clickCount++;
@@ -173,32 +185,31 @@ function generateAdvice() {
 }
 
 function makeButtonTricky() {
-    // Случайный размер
-    const newWidth = 100 + Math.random() * 150;
-    const newHeight = 40 + Math.random() * 40;
-    btn.style.width = `${newWidth}px`;
-    btn.style.height = `${newHeight}px`;
+    const btnWidth = btn.offsetWidth;
+    const btnHeight = btn.offsetHeight;
 
-    // Размер квадрата движения (px)
-    const moveRange = 300;
+    // Получаем размеры контейнера
+    const containerWidth = container.offsetWidth;
+    const containerHeight = container.offsetHeight;
 
-    // Центр окна
-    const centerX = window.innerWidth / 2;
-    const centerY = window.innerHeight / 2;
+    // Рассчитываем безопасные границы для кнопки
+    const maxX = containerWidth - btnWidth;
+    const maxY = containerHeight - btnHeight;
 
-    // Ограничение координат по горизонтали и вертикали с учётом нового размера
-    const minX = Math.max(centerX - moveRange / 2, 0);
-    const maxX = Math.min(centerX + moveRange / 2 - newWidth, window.innerWidth - newWidth);
-    const minY = Math.max(centerY - moveRange / 2, 0);
-    const maxY = Math.min(centerY + moveRange / 2 - newHeight, window.innerHeight - newHeight);
+    // Генерируем случайные координаты в пределах контейнера
+    const newX = Math.random() * maxX;
+    const newY = Math.random() * maxY;
 
-    // Новые случайные координаты в безопасном диапазоне
-    const newX = minX + Math.random() * (maxX - minX);
-    const newY = minY + Math.random() * (maxY - minY);
-
-    btn.style.position = "absolute";
+    // Применяем новые координаты
     btn.style.left = `${newX}px`;
     btn.style.top = `${newY}px`;
+    btn.style.transform = 'none'; // Убираем transform, который центрировал кнопку
+
+    // Случайный размер (с ограничениями)
+    const newWidth = Math.max(100, Math.min(250, 100 + Math.random() * 150));
+    const newHeight = Math.max(40, Math.min(80, 40 + Math.random() * 40));
+    btn.style.width = `${newWidth}px`;
+    btn.style.height = `${newHeight}px`;
 
     // Скругление
     btn.style.borderRadius = `${Math.random() * 50}%`;
@@ -216,7 +227,6 @@ function makeButtonTricky() {
     ];
     btn.textContent = texts[Math.floor(Math.random() * texts.length)];
 }
-
 
 </script>
 </body>
