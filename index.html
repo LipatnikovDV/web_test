@@ -173,8 +173,11 @@ function generateAdvice() {
 }
 
 function makeButtonTricky() {
-    const btnWidth = btn.offsetWidth;
-    const btnHeight = btn.offsetHeight;
+    // Случайный размер
+    const newWidth = 100 + Math.random() * 150;
+    const newHeight = 40 + Math.random() * 40;
+    btn.style.width = `${newWidth}px`;
+    btn.style.height = `${newHeight}px`;
 
     // Размер квадрата движения (px)
     const moveRange = 300;
@@ -183,11 +186,11 @@ function makeButtonTricky() {
     const centerX = window.innerWidth / 2;
     const centerY = window.innerHeight / 2;
 
-    // Ограничение координат по горизонтали и вертикали
+    // Ограничение координат по горизонтали и вертикали с учётом нового размера
     const minX = Math.max(centerX - moveRange / 2, 0);
-    const maxX = Math.min(centerX + moveRange / 2 - btnWidth, window.innerWidth - btnWidth);
+    const maxX = Math.min(centerX + moveRange / 2 - newWidth, window.innerWidth - newWidth);
     const minY = Math.max(centerY - moveRange / 2, 0);
-    const maxY = Math.min(centerY + moveRange / 2 - btnHeight, window.innerHeight - btnHeight);
+    const maxY = Math.min(centerY + moveRange / 2 - newHeight, window.innerHeight - newHeight);
 
     // Новые случайные координаты в безопасном диапазоне
     const newX = minX + Math.random() * (maxX - minX);
@@ -196,12 +199,6 @@ function makeButtonTricky() {
     btn.style.position = "absolute";
     btn.style.left = `${newX}px`;
     btn.style.top = `${newY}px`;
-
-    // Случайный размер
-    const newWidth = 100 + Math.random() * 150;
-    const newHeight = 40 + Math.random() * 40;
-    btn.style.width = `${newWidth}px`;
-    btn.style.height = `${newHeight}px`;
 
     // Скругление
     btn.style.borderRadius = `${Math.random() * 50}%`;
@@ -219,6 +216,7 @@ function makeButtonTricky() {
     ];
     btn.textContent = texts[Math.floor(Math.random() * texts.length)];
 }
+
 
 </script>
 </body>
