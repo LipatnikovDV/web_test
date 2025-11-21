@@ -192,18 +192,27 @@ function makeButtonTricky() {
     const containerWidth = container.offsetWidth;
     const containerHeight = container.offsetHeight;
 
-    // Рассчитываем безопасные границы для кнопки
-    const maxX = containerWidth - btnWidth;
-    const maxY = containerHeight - btnHeight;
+    // Центр экрана
+    const centerX = containerWidth / 2;
+    const centerY = containerHeight / 2;
 
-    // Генерируем случайные координаты в пределах контейнера
-    const newX = Math.random() * maxX;
-    const newY = Math.random() * maxY;
+    // Радиус движения от центра (можно настроить)
+    const movementRadius = 200; // пикселей от центра
+
+    // Рассчитываем безопасные границы вокруг центра
+    const minX = Math.max(0, centerX - movementRadius);
+    const maxX = Math.min(containerWidth - btnWidth, centerX + movementRadius);
+    const minY = Math.max(0, centerY - movementRadius);
+    const maxY = Math.min(containerHeight - btnHeight, centerY + movementRadius);
+
+    // Генерируем случайные координаты в пределах радиуса от центра
+    const newX = minX + Math.random() * (maxX - minX);
+    const newY = minY + Math.random() * (maxY - minY);
 
     // Применяем новые координаты
     btn.style.left = `${newX}px`;
     btn.style.top = `${newY}px`;
-    btn.style.transform = 'none'; // Убираем transform, который центрировал кнопку
+    btn.style.transform = 'none';
 
     // Случайный размер (с ограничениями)
     const newWidth = Math.max(100, Math.min(250, 100 + Math.random() * 150));
